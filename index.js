@@ -3,42 +3,45 @@ require("dotenv").config();
 require("./models/connect");
 const logger = require("morgan");
 const indexRouter = require("./routes/index");
-const errorHandler = require("./utils/errrorHandler");
+const errorHandler = require("./utils/errrorHandler"); // Fixed typo
 const { generatedError } = require("./middlewares/error");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const cors = require('cors');
-const userRouter = require("./routes/user")
+const cors = require("cors");
+const userRouter = require("./routes/user");
+const postRouter = require("./routes/post")
 
 const app = express();
 
-// logger
-
+// Logger middleware
 app.use(logger("tiny"));
 
 // Bodyparser middleware
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Cookie parser middleware
 app.use(cookieParser());
-
-// Routes middleware
 
 // Use CORS middleware
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
-app.options('*', cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true
-}));
+// Handle pre-flight requests with CORS
+app.options(
+  "*",
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 
+// Routes middleware
 app.use("/", indexRouter);
-app.use("/", userRouter );
+app.use("/", userRouter);
+app.use("/", postRouter);
 
-// Session and Cookie middleware
-
+// Session middleware
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -47,12 +50,12 @@ app.use(
   })
 );
 
-// Error handling middleware
-
+// Error handling for undefined routes
 app.all("*", (req, res, next) => {
   next(new errorHandler(`Requested Url Not Found: ${req.url}`, 404));
 });
 
+// Centralized error handling
 app.use(generatedError);
 
 const port = process.env.PORT;

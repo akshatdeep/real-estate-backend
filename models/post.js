@@ -66,7 +66,7 @@ const postSchema = new mongoose.Schema({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to User model
+        ref: 'Register', // Reference to User model
         required: true,
     },
     postDetail: {

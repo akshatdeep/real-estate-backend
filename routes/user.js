@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.get("/getAll", getAllUsers)
 
-router.get("/getuser",isAuthenticated, getUsers)
+router.get("/getuser/:id",isAuthenticated, getUsers)
 
 router.post("/updateUser/:id",isAuthenticated, getUpdateUsers )
 
