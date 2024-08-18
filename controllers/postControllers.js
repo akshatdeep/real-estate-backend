@@ -11,61 +11,51 @@ exports.getAllPost = catchAsyncError(async (req, res) => {
 
 exports.getSinglePost = catchAsyncError(async (req, res) => {
   const id = req.params.id;
-  const post = await Post.findById(id).populate("postDetail", "Register");
+  const post = await Post.findById(id).populate("userId");
   res.status(200).json(post);
 });
 
-exports.addPost = async (req, res) => {
-  const userId = req.user.id;
-  try {
-    const {
-      title,
-      price,
-      images,
-      address,
-      city,
-      bedroom,
-      bathroom,
-      latitude,
-      longitude,
-      type,
-      property,
-      postDetail,
-      savedPosts,
-    } = req.body;
 
-    const newPost = new Post({
-      title,
-      price,
-      images,
-      address,
-      city,
-      bedroom,
-      bathroom,
-      latitude,
-      longitude,
-      type,
-      property,
-      userId, // Directly use the userId from req.user._id
-      postDetail,
-      savedPosts,
+exports.addPost = async (req, res) => {
+  const tokenUserId = req.user._id;
+  
+  try {
+    const post = new Post({
+      title: req.body.title,
+      price: req.body.price,
+      address: req.body.address,
+      city: req.body.city,
+      bedroom: req.body.bedroom,
+      bathroom: req.body.bathroom,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude,
+      desc: req.body.desc,
+      utilities: req.body.utilities,
+      pet: req.body.pet,
+      income: req.body.income,
+      size: req.body.size,
+      school: req.body.school,
+      bus: req.body.bus,
+      restaurant: req.body.restaurant,
+      type: req.body.type,
+      property: req.body.property,
+      userId: tokenUserId,
     });
 
-    const savedPost = await newPost.save();
+    await post.save();
 
     res.status(201).json({
-      message: "Post created successfully",
-      post: savedPost,
+      message: "Post Created",
+      post: post
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Failed to create post", error: error.message });
+    res.status(500).json({
+      message: "Failed to create post",
+      error: error.message
+    });
   }
-  
 };
-
 
 
 exports.updatePost = catchAsyncError((req, res) => {

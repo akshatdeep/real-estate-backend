@@ -11,7 +11,7 @@ const { isAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
 
 router.get("/getAllPost", getAllPost);
-router.get("/:id", getSinglePost);
+router.get("/post/:id", getSinglePost);
 router.post("/addPost",isAuthenticated, addPost);
 router.post("/updatePost/:id",isAuthenticated, updatePost);
 router.post("/deletePost/:id",isAuthenticated, deletePost);

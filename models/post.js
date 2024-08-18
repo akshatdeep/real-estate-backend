@@ -1,7 +1,37 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-
-const postDetailSchema = new mongoose.Schema({
+// Define the Post schema
+const postSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  bedroom: {
+    type: Number,
+    required: true,
+  },
+  bathroom: {
+    type: Number,
+    required: true,
+  },
+  latitude: {
+    type: Number, // Consider using Number for coordinates
+  },
+  longitude: {
+    type: Number, // Consider using Number for coordinates
+  },
   desc: {
     type: String,
     required: true,
@@ -27,68 +57,34 @@ const postDetailSchema = new mongoose.Schema({
   restaurant: {
     type: Number,
   },
-});
-
-const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  images: [String], // Optional, adjust as needed
-  address: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-  },
-  bedroom: {
-    type: Number,
-    required: true,
-  },
-  bathroom: {
-    type: Number,
-    required: true,
-  },
-  latitude: {
-    type: String,
-    required: true,
-  },
-  longitude: {
-    type: String,
-    required: true,
-  },
   type: {
     type: String,
-    enum: ['buy', 'rent'],
+    enum: ["buy", "rent"],
     required: true,
   },
   property: {
     type: String,
-    enum: ['apartment', 'house', 'condo', 'land'],
+    enum: ["apartment", "house", "condo", "land"],
     required: true,
   },
+  images: [String],
   createdAt: {
     type: Date,
     default: Date.now,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "Register",
     required: true,
   },
-  postDetail: postDetailSchema,
-  savedPosts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'SavedPost',
-  }],
+  savedPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SavedPost",
+    },
+  ],
 });
 
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;

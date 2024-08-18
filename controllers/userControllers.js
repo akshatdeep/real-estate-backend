@@ -15,7 +15,6 @@ exports.getUsers = catchAsyncError(async (req, res) => {
 });
 
 exports.getUpdateUsers = [
-  
   catchAsyncError(async (req, res) => {
     const id = req.params.id;
     const { password, ...inputs } = req.body;
@@ -40,7 +39,7 @@ exports.getUpdateUsers = [
       return res.status(404).json({ message: "User Not Found" });
     }
 
-    res.status(200).json( updateUser);
+    res.status(200).json(updateUser);
   }),
 ];
 
