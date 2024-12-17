@@ -5,7 +5,6 @@ const {
   updatePost,
   deletePost,
   addPost,
-  createPostDetail,
 } = require("../controllers/postControllers");
 const { isAuthenticated } = require("../middlewares/auth");
 const router = express.Router();

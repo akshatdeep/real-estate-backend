@@ -27,10 +27,12 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   latitude: {
-    type: Number, // Consider using Number for coordinates
+    type: Number,
+    default:"no latitude given" 
   },
   longitude: {
-    type: Number, // Consider using Number for coordinates
+    type: Number,
+    default:"no longitude given"
   },
   desc: {
     type: String,

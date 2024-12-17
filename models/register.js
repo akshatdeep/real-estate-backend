@@ -18,7 +18,7 @@ const RegisterSchema = new mongoose.Schema({
     required: true,
   },
   avatar: {
-    type: String,
+    type:[String],
     default: null, // or you can set it as String if you want to enforce it
   },
   createdAt: {
