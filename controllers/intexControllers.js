@@ -15,21 +15,22 @@ exports.registerRouter = catchAsyncError(async (req, res) => {
 });
 
 exports.loginRouter = catchAsyncError(async (req, res, next) => {
-  const register = await Register.findOne({
-    username: req.body.username,
-  })
-    .select("+password")
-    .exec();
-  if (!register) {
-    return next(new errorHandler("Invalid credentials"), 404);
+  const { username, password } = req.body;
+
+  // 1. Find user by username
+  const user = await Register.findOne({ username }).select("+password").populate("savedPosts");
+  if (!user) {
+    return next(new errorHandler("Invalid credentials", 404));
   }
 
-  const isMatch = await register.comparePassword(req.body.password);
+  // 2. Match password
+  const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    return next(new errorHandler("Invalid credentials"), 404);
+    return next(new errorHandler("Invalid credentials", 404));
   }
-  sendToken(register, 201, res);
-  
+
+  // 3. Send token with populated user
+  sendToken(user, 200, res);
 });
 
 exports.logoutRouter = catchAsyncError(async (req, res) => {

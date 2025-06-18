@@ -18,8 +18,8 @@ const RegisterSchema = new mongoose.Schema({
     required: true,
   },
   avatar: {
-    type:[String],
-    default: null, // or you can set it as String if you want to enforce it
+    type: [String],
+    default: null,
   },
   createdAt: {
     type: Date,
@@ -28,44 +28,48 @@ const RegisterSchema = new mongoose.Schema({
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post", // Reference to Post model
+      ref: "Post",
     },
   ],
   savedPosts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SavedPost", // Reference to SavedPost model
+      ref: "SavedPost",
     },
   ],
   chats: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Chat", // Reference to Chat model
+      ref: "Chat",
     },
   ],
   chatIDs: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Chat", // Reference to Chat model
+      ref: "Chat",
     },
   ],
 });
 
-RegisterSchema.pre("save", async function () {
-  let salt = bcrypt.genSaltSync(10);
-  this.password = bcrypt.hashSync(this.password, salt);
+// 🔒 Password hash middleware (only hash if password is modified)
+RegisterSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
+// 🔑 Compare passwords
 RegisterSchema.methods.comparePassword = function (password) {
-  return bcrypt.compareSync(password, this.password);
+  return bcrypt.compare(password, this.password);
 };
 
-RegisterSchema.methods.getjettoken = function () {
-  return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+// 🧾 Generate JWT Token
+RegisterSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN, // e.g. "1h"
   });
 };
 
 const Register = mongoose.model("Register", RegisterSchema);
-
 module.exports = Register;

@@ -25,6 +25,7 @@ app.use(cookieParser());
 
 // Use CORS middleware
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+console.log('Allowed Origin:', process.env.CLIENT_URL);
 
 // Handle pre-flight requests with CORS
 app.options(
